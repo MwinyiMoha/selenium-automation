@@ -1,0 +1,32 @@
+name: Test
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Cache pip dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: cache-0
+      - name: Set up poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.11
+      - name: Cache poetry dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pypoetry
+          key: cache-{{ hashFiles('**/poetry.lock') }}
+      - name: Install project dependencies
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest
