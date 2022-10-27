@@ -40,3 +40,16 @@ jobs:
           INVALID_EMAIL: ${{ secrets.INVALID_EMAIL }}
           INVALID_PASSWORD: ${{ secrets.INVALID_PASSWORD }}
           DEFAULT_WAIT_TIME: ${{ secrets.DEFAULT_WAIT_TIME }}
+      - name: Upload GH Pages artifact
+        uses: actions/upload-pages-artifact@v1.0.4
+        with:
+          path: htmlcov
+  deploy:
+    needs: test
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GH Pages
+        uses: actions/deploy-pages@v1
