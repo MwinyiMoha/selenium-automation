@@ -1,6 +1,9 @@
 name: Test
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
   test:
@@ -30,3 +33,10 @@ jobs:
         run: poetry install
       - name: Run tests
         run: poetry run pytest
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
+          VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
+          INVALID_EMAIL: ${{ secrets.INVALID_EMAIL }}
+          INVALID_PASSWORD: ${{ secrets.INVALID_PASSWORD }}
+          DEFAULT_WAIT_TIME: ${{ secrets.DEFAULT_WAIT_TIME }}
