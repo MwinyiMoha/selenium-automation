@@ -16,7 +16,7 @@ pytest-xdist = "^3.0.2"
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q"
+addopts = "-ra -q -n auto"
 testpaths = [
 	"tests"
 ]
