@@ -1,6 +1,8 @@
 name: Test
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
 
 jobs:
   test:
@@ -30,3 +32,28 @@ jobs:
         run: poetry install
       - name: Run tests
         run: poetry run pytest
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
+          VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
+          INVALID_EMAIL: ${{ secrets.INVALID_EMAIL }}
+          INVALID_PASSWORD: ${{ secrets.INVALID_PASSWORD }}
+          DEFAULT_WAIT_TIME: ${{ secrets.DEFAULT_WAIT_TIME }}
+      - name: Upload GH Pages artifact
+        uses: actions/upload-pages-artifact@v1.0.4
+        with:
+          path: htmlcov
+  deploy:
+    needs: test
+    permissions:
+      pages: write
+      id-token: write
+      deployments: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GH Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
